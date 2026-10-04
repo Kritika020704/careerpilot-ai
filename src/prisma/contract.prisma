@@ -1,0 +1,92 @@
+// use prisma-next
+
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime      @default(now())
+  
+  resumes      Resume[]
+  jobs         Job[]
+  applications Application[]
+}
+
+model Resume {
+  id        Int          @id @default(autoincrement())
+  title     String
+  fileUrl   String
+  cloudinaryPublicId String?
+  userId    Int
+  user      User         @relation(fields: [userId], references: [id])
+  skills    ResumeSkill[]
+  createdAt DateTime     @default(now())
+  analyses ResumeAnalysis[]
+}
+
+model Job {
+  id           Int           @id @default(autoincrement())
+  title        String
+  company      String
+  description  String
+  location     String?
+  url          String?
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  applications Application[]
+  skills       JobSkill[]
+  createdAt    DateTime      @default(now())
+  analyses ResumeAnalysis[]
+}
+
+model Application {
+  id        Int      @id @default(autoincrement())
+  status    String
+  appliedAt DateTime?
+  notes     String?
+  userId    Int
+  jobId     Int
+  user      User     @relation(fields: [userId], references: [id])
+  job       Job      @relation(fields: [jobId], references: [id])
+  createdAt DateTime @default(now())
+  
+}
+
+model Skill {
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
+  resumes   ResumeSkill[]
+  jobs      JobSkill[]
+  createdAt DateTime     @default(now())
+}
+
+model ResumeSkill {
+  resumeId Int
+  skillId  Int
+  resume   Resume @relation(fields: [resumeId], references: [id])
+  skill    Skill  @relation(fields: [skillId], references: [id])
+
+  @@id([resumeId, skillId])
+}
+
+model JobSkill {
+  jobId   Int
+  skillId Int
+  job     Job   @relation(fields: [jobId], references: [id])
+  skill   Skill @relation(fields: [skillId], references: [id])
+
+  @@id([jobId, skillId])
+}
+
+model ResumeAnalysis {
+  id         Int      @id @default(autoincrement())
+  resumeId   Int
+  jobId      Int
+  matchScore Float?
+  summary    String?
+  resultJson String?
+  createdAt  DateTime @default(now())
+
+  resume Resume @relation(fields: [resumeId], references: [id])
+  job    Job    @relation(fields: [jobId], references: [id])
+}
