@@ -394,13 +394,10 @@ export default function ApplicationsPage() {
                       </p>
                     )}
 
-<button
-  type="button"
-  onClick={() => deleteApplication(application.id)}
-  className="mt-5 rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
->
-  Delete Application
-</button>
+                    <button type="button" onClick={() => deleteApplication(application.id)}
+                    className="mt-5 rounded-lg border border-red-500/30 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/10">
+                    Delete Application
+                    </button>
 
                   </article>
                 );
